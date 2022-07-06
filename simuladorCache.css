@@ -1,0 +1,134 @@
+body,html {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    /* overflow: hidden; */
+    font-family:
+    'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+p {
+    margin: 0.5em;
+}
+input[type="number"] {
+    width: 5em;
+}
+fieldset {
+    flex-grow: 2;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background-color: #DDD;
+}
+fieldset legend {
+    width: calc(100% - 1em);
+    background-color: #EEE;
+    padding: 0.5em;
+    margin: 0;
+}
+fieldset:not(:first-child) {
+    border-left: 1px solid #CCC;
+}
+#config {
+    display: flex;
+    height: 16em;
+    overflow: auto;
+}
+#representacaoEndereco table td {
+    width: 2em;
+}
+#representacaoEndereco .bit {
+    border-left: 1px solid #444;
+}
+#representacaoEndereco .tag {
+    background-color: aquamarine;
+    text-align: center;
+}
+#representacaoEndereco .conjunto {
+    background-color: lightblue;
+    text-align: center;
+}
+#representacaoEndereco .bloco {
+    background-color: lightgreen;
+    text-align: center;
+}
+#memoria {
+    display: flex;
+    width: 100%;
+    height: calc(100% - 20em);
+}
+#memoria fieldset {
+    position: relative;
+    width: 50vw;
+}
+#mc {
+    overflow-x: hidden;
+    overflow-y: scroll;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    height: 100%;
+    position: relative;
+    display: block;
+}
+#acessos {
+    overflow-x: hidden;
+    overflow-y: scroll;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    height: 100%;
+    width: auto;
+}
+table tr:hover td {
+    background-color: #EEE;
+}
+#mc .conjunto {
+    border: 1px solid #444;
+    text-overflow: ellipsis;
+    width: 50vw;
+    overflow: hidden;
+    position: relative;
+}
+#mc .linha {
+    border-top: 1px solid #888;
+    border-left: 1px solid #888;
+    margin-left: 2em;
+    white-space: nowrap;
+    max-width: 100%;
+    overflow: hidden;
+    position: relative;
+}
+#mc .linha * {
+    display: inline-block;
+    padding: 0 1em;
+    text-overflow: ellipsis;
+    position: relative;
+    white-space: nowrap;
+}
+#mc .linha .bloco {
+    text-overflow: ellipsis;
+}
+.lendo {
+    background-color: #FF0;
+}
+.falta {
+    background-color: #F00;
+}
+.acerto {
+    background-color: #0F0;
+}
+.binario {
+    font-family: monospace;
+    white-space: nowrap;
+}
+#rodape {
+    height: 4em;
+    background-color: #EEE;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+}
+#rodape p {
+    padding: 1em;
+}

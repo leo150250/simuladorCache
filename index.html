@@ -1,0 +1,70 @@
+<html>
+    <head>
+        <title>Simulador de Memória Cache</title>
+        <link href="simuladorCache.css" rel="stylesheet" type="text/css">
+        <meta charset="UTF-8">
+    </head>
+    <body>
+        <div id="config">
+            <fieldset>
+                <legend>Configuração</legend>
+                <p>Bytes de cada célula: <input type="number" id="bytesMP" value="1" onchange="atualizaConfig()"></p>
+                <p>Células da MP: <input type="number" id="celulasMP" value="4096" onchange="atualizaConfig()"></p>
+                <p>Células em cada bloco da MP: <input type="number" id="celulasBlocoMP" value="16" onchange="atualizaConfig()"></p>
+                <p>Linhas na MC: <input type="number" id="linhasMC" value="32" onchange="atualizaConfig()"></p>
+                <p>Método de substituição:
+                    <select id="defMetodoSubstituicao">
+                        <option value="FIFO">FIFO</option>
+                        <option value="LRU">LRU</option>
+                        <option value="RANDOM">Random</option>
+                    </select></p>
+                </select></p>
+            </fieldset>
+            <fieldset>
+                <legend>Detalhamento</legend>
+                <p>Bits necessários para o endereço: <span id="bitsEndereco">#</span></p>
+                <p>Bits necessários para identificar o byte do bloco: <span id="bitsByteBloco">#</span></p>
+                <p>Mapeamento:
+                    <select id="defMapeamento" onchange="atualizaMapeamento()">
+                        <option value="direto">Direto</option>
+                        <option value="totAssociativo">Totalmente associativo</option>
+                        <option value="conjAssociativo">Associativo por conjunto</option>
+                    </select> <span id="defLinhasConjunto">Linhas por conjunto: <input type="number" id="linhasConjunto" min="1" value="4" onchange="atualizaMapeamento()"></span>
+                </p>
+                <p>Endereço:<br>
+                    <div id="representacaoEndereco">
+                    </div>
+                </p>
+            </fieldset>
+            <fieldset>
+                <legend>Simulação</legend>
+                <p>Endereços a serem acessados (separados por vírgula):<br>
+                    <textarea id="enderecos" rows="5" cols="50">0,1,6,7,8,9,992,993,994,481,482,0,1,2,996,224,225,2017,2018,4064,996</textarea>
+                </p>
+                <p>
+                    <button onclick="executarSimulacao()">PLAY</button>
+                    <button onclick="pausarSimulacao()">PAUSE</button>
+                    <button onclick="resetarSimulacao()">STOP</button>
+                    <button onclick="executarProximaEtapa()">STEP</button>
+                    <input type="range" id="velocidade" min="1" max="60" value="5" onchange="atualizaVelocidade()"> <span id="velocidadeTexto">#</span> etapas p/ segundo
+                </p>
+            </fieldset>
+        </div>
+        <div id="memoria">
+            <fieldset>
+                <legend>Memória cache</legend>
+                <div id="mc">
+                </div>
+            </fieldset><fieldset>
+                <legend>Acessos à memória</legend>
+                <div id="acessos">
+                </div>
+            </fieldset>
+            
+        </div>
+        <div id="rodape">
+            <p>Simulador de Memória Cache - Desenvolvido por <a href="http://leandrogabriel.net/">LeandroGabriel.net</a>, 2022 --- HIC SUNT DEFECTIS!</p>
+        </div>
+        <script src="simuladorCache.js"></script>
+    </body>
+</html>
