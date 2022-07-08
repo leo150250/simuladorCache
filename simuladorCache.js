@@ -203,7 +203,7 @@ function atualizaMapeamento() {
             span_defLinhasConjunto.style.display="none";
             bitsByteConjunto=0;
             bitsByteTag=bitsEndereco-bitsByteBloco;
-            linhasConjunto=Math.pow(2,bitsByteTag);
+            linhasConjunto=linhasMC;
         } break;
         case "conjAssociativo": {
             span_defLinhasConjunto.style.display="inline";
