@@ -58,7 +58,7 @@ class Conjunto {
     desenharConjunto(argTexto) {
         this.div_conjunto = document.createElement('div');
         this.div_conjunto.className = 'conjunto';
-        this.div_conjunto.innerHTML = argTexto;
+        this.div_conjunto.innerHTML = "<span class=\"nomeConjunto\">"+argTexto+"</span>";
         for (let i = 0; i < this.linhas.length; i++) {
             this.div_conjunto.appendChild(this.linhas[i].desenharLinha(i+1));
         }
@@ -221,6 +221,7 @@ function atualizaMapeamento() {
     bitsByteTag=bitsEndereco-bitsByteBloco-bitsByteConjunto;
     div_representacaoEndereco.innerHTML="";
     novaTabela=document.createElement("table");
+    novaTabela.border="0";
     novaLinha=document.createElement("tr");
     for (let i=bitsEndereco-1; i>=0; i--) {
         novaCelula=document.createElement("td");
@@ -319,7 +320,7 @@ function atualizaMemoriaCache() {
         while (idConjunto.length<bitsByteConjunto) {
             idConjunto="0"+idConjunto;
         }
-        div_mc.appendChild(conjuntos[conjunto].desenharConjunto("Conjunto "+idConjunto));
+        div_mc.appendChild(conjuntos[conjunto].desenharConjunto("Conjunto "+idConjunto+" ("+(bin2dec(idConjunto)+1)+")"));
     }
 }
 function executarProximaEtapa() {
@@ -347,26 +348,26 @@ function executarProximaEtapa() {
             enderecos[numEnderecoLeitura][3].innerHTML="FALTA";
             enderecos[numEnderecoLeitura][3].classList.add("falta");
             let descricaoBloco=blocosAnteriores[0].toString()+".."+blocosAnteriores[blocosAnteriores.length-1].toString();
-            enderecos[numEnderecoLeitura][4].innerHTML="V é válido, mas a tag está diferente. Atualiza o bloco na linha onde estavam os endereços "+descricaoBloco+" e atualiza a tag.";
+            enderecos[numEnderecoLeitura][4].innerHTML="Tag diferente. Atualiza o bloco na linha onde estavam os endereços "+descricaoBloco+" e atualiza a tag.";
         } else if (acessoResultado=="F2") {
             enderecos[numEnderecoLeitura][3].innerHTML="FALTA";
             enderecos[numEnderecoLeitura][3].classList.add("falta");
-            enderecos[numEnderecoLeitura][4].innerHTML="V não é válido. Carrega o bloco na próxima linha do conjunto.";
+            enderecos[numEnderecoLeitura][4].innerHTML="Falta compulsória. Carrega o bloco na próxima linha do conjunto.";
         } else if (acessoResultado=="F3") {
             enderecos[numEnderecoLeitura][3].innerHTML="FALTA";
             enderecos[numEnderecoLeitura][3].classList.add("falta");
             let descricaoBloco=blocosAnteriores[0].toString()+".."+blocosAnteriores[blocosAnteriores.length-1].toString();
-            enderecos[numEnderecoLeitura][4].innerHTML="V é válido, mas a tag está diferente. Atualiza o bloco na linha onde estavam os endereços "+descricaoBloco+" através do método FIFO e atualiza a tag.";
+            enderecos[numEnderecoLeitura][4].innerHTML="Tag está diferente. Atualiza o bloco na linha onde estavam os endereços "+descricaoBloco+" através do método FIFO e atualiza a tag.";
         } else if (acessoResultado=="F4") {
             enderecos[numEnderecoLeitura][3].innerHTML="FALTA";
             enderecos[numEnderecoLeitura][3].classList.add("falta");
             let descricaoBloco=blocosAnteriores[0].toString()+".."+blocosAnteriores[blocosAnteriores.length-1].toString();
-            enderecos[numEnderecoLeitura][4].innerHTML="V é válido, mas a tag está diferente. Atualiza o bloco na linha onde estavam os endereços "+descricaoBloco+" através do método LRU e atualiza a tag.";
+            enderecos[numEnderecoLeitura][4].innerHTML="Tag está diferente. Atualiza o bloco na linha onde estavam os endereços "+descricaoBloco+" através do método LRU e atualiza a tag.";
         } else if (acessoResultado=="F5") {
             enderecos[numEnderecoLeitura][3].innerHTML="FALTA";
             enderecos[numEnderecoLeitura][3].classList.add("falta");
             let descricaoBloco=blocosAnteriores[0].toString()+".."+blocosAnteriores[blocosAnteriores.length-1].toString();
-            enderecos[numEnderecoLeitura][4].innerHTML="V é válido, mas a tag está diferente. Atualiza o bloco na linha onde estavam os endereços "+descricaoBloco+" através do método RANDOM e atualiza a tag.";
+            enderecos[numEnderecoLeitura][4].innerHTML="Tag está diferente. Atualiza o bloco na linha onde estavam os endereços "+descricaoBloco+" através do método RANDOM e atualiza a tag.";
         }
         enderecos[numEnderecoLeitura][1].parentElement.scrollIntoView({block:"center",inline:"center"});
         enderecoLendoBits=null;
@@ -382,7 +383,7 @@ function lerProximoEndereco() {
     }
     if (numEnderecoLeitura<enderecos.length) {
         enderecos[numEnderecoLeitura][1].parentElement.classList.add("lendo");
-        enderecos[numEnderecoLeitura][1].parentElement.scrollIntoView({block:"center",inline:"center"});
+        enderecos[numEnderecoLeitura][1].parentElement.scrollIntoView({block:"center",inline:"center",behavior:"smooth"});
         enderecos[numEnderecoLeitura][3].innerHTML="Lendo...";
         enderecos[numEnderecoLeitura][4].innerHTML="";
         enderecoLendoBits=enderecos[numEnderecoLeitura][0].toString(2);
@@ -397,7 +398,7 @@ function lerConjunto() {
     if (conjuntoLendo==null) {
         conjuntoLendo=bin2dec(enderecoLendoBits.substring(bitsByteTag,bitsByteTag+bitsByteConjunto));
         conjuntos[conjuntoLendo].div_conjunto.classList.add("lendo");
-        conjuntos[conjuntoLendo].div_conjunto.scrollIntoView({block:"center",inline:"center"});
+        conjuntos[conjuntoLendo].div_conjunto.scrollIntoView({block:"center",inline:"center",behavior:"smooth"});
         conjuntos[conjuntoLendo].atualizarUsosLinhas();
     }
 }
