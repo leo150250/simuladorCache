@@ -10,6 +10,12 @@ body,html {
     font-family:
     'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
+.escondido {
+    width: 0px !important;
+    height: 0px !important;
+    margin: 0px !important;
+    padding: 0px !important;
+}
 p {
     margin: 0.5em;
 }
@@ -140,13 +146,31 @@ a:hover {
 }
 #mc .linha * {
     display: inline-block;
-    padding: 0 1em;
+    padding: 0.1em 1em;
     text-overflow: ellipsis;
     position: relative;
     white-space: nowrap;
 }
+#mc .linha .numLinha {
+    padding: 0em;
+    width: 2em;
+}
+#mc .linha .descritivo {
+    display: block;
+    width: auto;
+    padding: 0;
+    user-select: none;
+}
 #mc .linha .bloco {
-    text-overflow: ellipsis;
+    border-left: 1px outset #FFF8;
+    border-right: 1px outset #FFF8;
+    background-color: #DDD;
+    padding: 0;
+    width: 2em;
+    max-width: 2em;
+}
+#mc .linha .bloco:hover {
+    background-color: #EEE;
 }
 .acesso {
     text-align: center;

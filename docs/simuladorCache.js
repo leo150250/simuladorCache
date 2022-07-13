@@ -23,6 +23,8 @@ const div_acessos = document.getElementById('acessos');
 //Função pra verificar se um número é potência de 2
 const isPowerOfTwo = number => (number & (number - 1)) === 0;
 
+const input_exibirDescritivos = document.getElementById('exibirDescritivos');
+
 var bytesMP=0;
 var celulasMP=0;
 var celulasBlocoMP=parseInt(input_celulasBlocoMP.value);
@@ -103,11 +105,14 @@ class Linha {
     linhaUso=0;
     constructor(argTag) {
         this.atualizarTag(argTag);
+        for (let i = 0; i < this.blocos.length; i++) {
+            this.blocos[i]=new Bloco(this,0);
+        }
     }
     desenharLinha(argNumLinha) {
         this.div_linha=document.createElement('div');
         this.div_linha.className='linha';
-        this.div_linha.innerHTML=argNumLinha+": ";
+        this.div_linha.innerHTML="<span class=\"numLinha\">"+argNumLinha+":</span>";
         this.div_valido=document.createElement('div');
         this.div_valido.className='valido';
         this.div_tag=document.createElement('div');
@@ -117,16 +122,16 @@ class Linha {
         this.div_linha.appendChild(this.div_valido);
         this.div_linha.appendChild(this.div_tag);
         this.div_linha.appendChild(this.div_blocos);
-        this.div_valido.innerHTML="V<br>"+(this.valido?'1':'0');
-        this.div_tag.innerHTML="Tag<br>"+this.tag;
-        this.div_blocos.innerHTML='Blocos<br>';
+        this.div_valido.innerHTML="<span class=\"descritivo\">V</span>"+(this.valido?'1':'0');
+        this.div_tag.innerHTML="<span class=\"descritivo\">Tag</span>"+this.tag.toString();
+        this.div_blocos.innerHTML='<span class=\"descritivo\">Blocos</span>';
         for (let i = 0; i < celulasBlocoMP; i++) {
-            if (this.blocos[i]==undefined) {
-                this.blocos[i]=0;
-            }
-            this.div_blocos.innerHTML+=this.blocos[i];
+            this.div_blocos.appendChild(this.blocos[i].desenharBloco());
             if (i<celulasBlocoMP-1) {
-                this.div_blocos.innerHTML+=' | ';
+                let spanSeparador=document.createElement('span');
+                spanSeparador.innerHTML=' | ';
+                spanSeparador.classList.add("escondido");
+                this.div_blocos.appendChild(spanSeparador);
             }
         }
         return this.div_linha;
@@ -135,22 +140,15 @@ class Linha {
         this.atualizarTag(argTag);
         this.atribuirValorBlocos(argValorBlocos);
         this.valido=true;
-        this.div_valido.innerHTML="V<br>"+(this.valido?'1':'0');
-        this.div_tag.innerHTML="Tag<br>"+this.tag.toString();
-        this.div_blocos.innerHTML='Blocos<br>';
-        for (let i = 0; i < celulasBlocoMP; i++) {
-            this.div_blocos.innerHTML+=this.blocos[i];
-            if (i<celulasBlocoMP-1) {
-                this.div_blocos.innerHTML+=' | ';
-            }
-        }
+        this.div_valido.innerHTML="<span class=\"descritivo\">V</span>"+(this.valido?'1':'0');
+        this.div_tag.innerHTML="<span class=\"descritivo\">Tag</span>"+this.tag.toString();
         this.conjuntoPai.atualizarNumLinha();
         this.linhaUso=0;
     }
     atribuirValorBlocos(argValorInicial) {
         var valorInicial=argValorInicial-(argValorInicial%celulasBlocoMP);        
         for (let i = 0; i < this.blocos.length; i++) {
-            this.blocos[i]=valorInicial+i;
+            this.blocos[i].atualizarBloco(valorInicial+i);
         }
         this.valido=true;
     }
@@ -169,6 +167,26 @@ class Linha {
         this.div_tag.classList.remove("acerto");
         this.div_tag.classList.remove("falta");
         this.div_blocos.classList.remove("lendo");
+    }
+}
+
+class Bloco {
+    div_bloco=null;
+    linhaPai=null;
+    valor=0;
+    constructor(argLinhaPai,argValor) {
+        this.linhaPai=argLinhaPai;
+        this.valor=argValor;
+    }
+    desenharBloco() {
+        this.div_bloco=document.createElement('div');
+        this.div_bloco.className='bloco';
+        this.div_bloco.innerHTML=this.valor;
+        return this.div_bloco;
+    }
+    atualizarBloco(argValor) {
+        this.valor=argValor;
+        this.div_bloco.innerHTML=this.valor;
     }
 }
 
@@ -521,6 +539,19 @@ function atualizaVelocidade() {
     }
 }
 
+function atualizarDescritivos() {
+    if (input_exibirDescritivos.checked) {
+        document.querySelectorAll('.descritivo').forEach(descritivo => {
+            descritivo.style.display="block";
+        });
+    } else {
+        document.querySelectorAll('.descritivo').forEach(descritivo => {
+            descritivo.style.display="none";
+        });
+    }
+}
+
 //Ação!
 atualizaConfig();
 executarSimulacao();
+atualizarDescritivos();
