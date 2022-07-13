@@ -1,3 +1,7 @@
+:root {
+    --destaqueClaro: #5b5bca;
+    --destaqueEscuro: #46469c;
+}
 body,html {
     margin: 0;
     width: 100%;
@@ -17,27 +21,46 @@ fieldset {
     margin: 0;
     padding: 0;
     border: 0;
-    background-color: #DDD;
+    background-color: #EEE;
+    border-left: 1px outset #FFF4;
+    border-right: 1px outset #FFF4;
 }
 fieldset legend {
-    width: calc(100% - 1em);
-    background-color: #EEE;
+    width: calc(100% - 1em + 2px);
+    background: linear-gradient(to right, var(--destaqueClaro), var(--destaqueEscuro));
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-bottom: 1px solid #CCC;
+    color: #FFF;
+    font-weight: bold;
+    font-variant: small-caps;
     padding: 0.5em;
-    margin: 0;
+    margin: 0 -1px;
 }
-fieldset:not(:first-child) {
-    border-left: 1px solid #CCC;
+a {
+    color: #FFF;
+    background-color: var(--destaqueClaro);
+    text-decoration: none;
+    border-radius: 10px;
+    padding: 0em 0.5em;
+}
+a:hover {
+    background-color: #7171da;
 }
 #config {
     display: flex;
     height: 16em;
     overflow: auto;
 }
+#representacaoEndereco table {
+    width: calc(100% - 1em);
+    margin: 0 0.5em;
+}
 #representacaoEndereco table td {
     width: 2em;
 }
 #representacaoEndereco .bit {
-    border-left: 1px solid #444;
+    border-left: 1px solid #0004;
 }
 #representacaoEndereco .tag {
     background-color: aquamarine;
@@ -76,25 +99,44 @@ fieldset:not(:first-child) {
     white-space: nowrap;
     height: 100%;
     width: auto;
-}
-table tr:hover td {
     background-color: #EEE;
 }
+#acessos table {
+    padding: 0em 1em;
+    width: 100%;
+}
+#acessos table tr {
+    height: 5em;
+}
+#acessos table tr:hover {
+    background-color: #FFF;
+}
 #mc .conjunto {
-    border: 1px solid #444;
     text-overflow: ellipsis;
     width: 50vw;
     overflow: hidden;
     position: relative;
+    padding: 0.5em;
+    background-color: #DDD;
+    border-top: 1px outset #FFF8;
+    border-bottom: 1px outset #FFF8;
+}
+#mc .conjunto .nomeConjunto {
+    display: block;
 }
 #mc .linha {
-    border-top: 1px solid #888;
-    border-left: 1px solid #888;
-    margin-left: 2em;
+    border-top: 1px outset #FFF8;
+    border-bottom: 1px outset #FFF8;
+    background-color: #EEE;
+    margin-left: 1em;
+    padding-left: 1em;
     white-space: nowrap;
     max-width: 100%;
     overflow: hidden;
     position: relative;
+}
+#mc .linha:hover {
+    background-color: #FFF;
 }
 #mc .linha * {
     display: inline-block;
@@ -106,14 +148,30 @@ table tr:hover td {
 #mc .linha .bloco {
     text-overflow: ellipsis;
 }
+.acesso {
+    text-align: center;
+    padding: 0.25em;
+    font-weight: bold;
+}
 .lendo {
-    background-color: #FF0;
+    background: linear-gradient(to right,#FF0,#0000,#FF0,#0000);
+    background-size: 300%;
+    background-position: 0% 0%;
+    animation: leitura 1s linear infinite;
+}
+@keyframes leitura {
+    0% {
+        background-position: 100% 0%;
+    }
+    100% {
+        background-position: 0% 0%;
+    }
 }
 .falta {
-    background-color: #F00;
+    background-color: #e00000;
 }
 .acerto {
-    background-color: #0F0;
+    background-color: #00e000;
 }
 .binario {
     font-family: monospace;
@@ -121,7 +179,10 @@ table tr:hover td {
 }
 #rodape {
     height: 4em;
-    background-color: #EEE;
+    background: linear-gradient(to right, var(--destaqueClaro), var(--destaqueEscuro));
+    color: #FFF;
+    font-weight: bold;
+    font-variant: small-caps;
     display: flex;
     justify-content: flex-end;
     align-items: center;
@@ -130,5 +191,7 @@ table tr:hover td {
     bottom: 0;
 }
 #rodape p {
-    padding: 1em;
+    margin: 0;
+    padding: 0em 1em;
+    text-align: right;
 }
