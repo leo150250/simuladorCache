@@ -41,12 +41,14 @@
                 <p>Endereços a serem acessados (separados por vírgula):<br>
                     <textarea id="enderecos" rows="5" cols="50" onchange="atualizaEnderecos()">0,1,6,7,8,9,992,993,994,481,482,0,1,2,996,224,225,2017,2018,4064,996</textarea>
                 </p>
+                <p>Gerar endereços aleatórios: <input type="number" id="numEnderecosAleatorios" value="32"> <button onclick="gerarEnderecosAleatorios()">Gerar!</button></p>
                 <p>
                     <button onclick="executarSimulacao()">PLAY</button>
                     <button onclick="pausarSimulacao()">PAUSE</button>
                     <button onclick="resetarSimulacao()">STOP</button>
                     <button onclick="executarProximaEtapa()">STEP</button>
                     <input type="range" id="velocidade" min="1" max="60" value="5" onchange="atualizaVelocidade()"> <span id="velocidadeTexto">#</span> etapas p/ segundo
+                    <br>Etapas detalhadas: <input type="checkbox" checked id="etapasDetalhadas" onchange="atualizaVelocidade()">
                 </p>
             </fieldset>
         </div>

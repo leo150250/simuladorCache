@@ -15,6 +15,7 @@ const div_representacaoEndereco = document.getElementById('representacaoEndereco
 const textarea_enderecos = document.getElementById('enderecos');
 const input_velocidade = document.getElementById('velocidade');
 const span_velocidadeTexto = document.getElementById('velocidadeTexto');
+const input_numEnderecosAleatorios = document.getElementById('numEnderecosAleatorios');
 //Área da memória cache
 const div_mc = document.getElementById('mc');
 //Área dos endereços para acesso à memória
@@ -24,6 +25,7 @@ const div_acessos = document.getElementById('acessos');
 const isPowerOfTwo = number => (number & (number - 1)) === 0;
 
 const input_exibirDescritivos = document.getElementById('exibirDescritivos');
+const input_etapasDetalhadas = document.getElementById('etapasDetalhadas');
 
 var bytesMP=0;
 var celulasMP=0;
@@ -436,12 +438,12 @@ function executarProximaEtapa() {
         } else if (acessoResultado=="F4") {
             enderecos[numEnderecoLeitura][3].innerHTML="FALTA";
             enderecos[numEnderecoLeitura][3].classList.add("falta");
-            let descricaoBloco=blocosAnteriores[0].toString()+".."+blocosAnteriores[blocosAnteriores.length-1].toString();
+            let descricaoBloco=blocosAnteriores[0].valor.toString()+".."+blocosAnteriores[blocosAnteriores.length-1].valor.toString();
             enderecos[numEnderecoLeitura][4].innerHTML="Tag está diferente. Atualiza o bloco na linha onde estavam os endereços "+descricaoBloco+" através do método LRU e atualiza a tag.";
         } else if (acessoResultado=="F5") {
             enderecos[numEnderecoLeitura][3].innerHTML="FALTA";
             enderecos[numEnderecoLeitura][3].classList.add("falta");
-            let descricaoBloco=blocosAnteriores[0].toString()+".."+blocosAnteriores[blocosAnteriores.length-1].toString();
+            let descricaoBloco=blocosAnteriores[0].valor.toString()+".."+blocosAnteriores[blocosAnteriores.length-1].valor.toString();
             enderecos[numEnderecoLeitura][4].innerHTML="Tag está diferente. Atualiza o bloco na linha onde estavam os endereços "+descricaoBloco+" através do método RANDOM e atualiza a tag.";
         }
         enderecos[numEnderecoLeitura][1].parentElement.scrollIntoView({block:"center",inline:"center"});
@@ -450,6 +452,9 @@ function executarProximaEtapa() {
         blocoLendo=null;
         acessoResultado=null;
         numEnderecoLeitura++;
+        if (!input_etapasDetalhadas.checked) {
+            executarProximaEtapa();
+        }
     }
 }
 function lerProximoEndereco() {
@@ -465,6 +470,9 @@ function lerProximoEndereco() {
         while (enderecoLendoBits.length<bitsEndereco) {
             enderecoLendoBits="0"+enderecoLendoBits;
         }
+        if (!input_etapasDetalhadas.checked) {
+            executarProximaEtapa();
+        }
     } else {
         pausarSimulacao();
     }
@@ -475,6 +483,9 @@ function lerConjunto() {
         conjuntos[conjuntoLendo].div_conjunto.classList.add("lendo");
         conjuntos[conjuntoLendo].div_conjunto.scrollIntoView({block:"start",inline:"center",behavior:"smooth"});
         conjuntos[conjuntoLendo].atualizarUsosLinhas();
+        if (!input_etapasDetalhadas.checked) {
+            executarProximaEtapa();
+        }
     }
 }
 function lerBloco() {
@@ -503,6 +514,9 @@ function lerBloco() {
         }
         if (linhaLeitura===false) {
             linhaLeitura=-1;
+        }
+        if (!input_etapasDetalhadas.checked) {
+            executarProximaEtapa();
         }
     }
 }
@@ -615,7 +629,21 @@ function pararScroll() {
 }
 document.addEventListener("mouseup",pararScroll);
 
+function gerarEnderecosAleatorios() {
+    textoEnderecos="";
+    for (let i=0; i<parseInt(input_numEnderecosAleatorios.value); i++) {
+        let endereco=Math.floor(Math.random()*Math.pow(2,bitsEndereco));
+        textoEnderecos+=endereco;
+        if (i<parseInt(input_numEnderecosAleatorios.value)-1) {
+            textoEnderecos+=",";
+        }
+    }
+    textarea_enderecos.innerText=textoEnderecos;
+    atualizaEnderecos();
+}
+
 //Ação!
 atualizaConfig();
-//executarSimulacao();
+//gerarEnderecosAleatorios();
 atualizarDescritivos();
+executarSimulacao();
