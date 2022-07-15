@@ -101,6 +101,7 @@ a:hover {
 #acessos table {
     padding: 0em 1em;
     width: 100%;
+    white-space: break-spaces;
 }
 #acessos table tr {
     height: 5em;
