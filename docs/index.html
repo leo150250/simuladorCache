@@ -39,7 +39,7 @@
             <fieldset>
                 <legend>Simulação</legend>
                 <p>Endereços a serem acessados (separados por vírgula):<br>
-                    <textarea id="enderecos" rows="5" cols="50">0,1,6,7,8,9,992,993,994,481,482,0,1,2,996,224,225,2017,2018,4064,996</textarea>
+                    <textarea id="enderecos" rows="5" cols="50" onchange="atualizaEnderecos()">0,1,6,7,8,9,992,993,994,481,482,0,1,2,996,224,225,2017,2018,4064,996</textarea>
                 </p>
                 <p>
                     <button onclick="executarSimulacao()">PLAY</button>
@@ -52,7 +52,7 @@
         </div>
         <div id="memoria">
             <fieldset>
-                <legend>Memória cache</legend>
+                <legend>Memória cache | Exibir descrições<input id="exibirDescritivos" onchange="atualizarDescritivos()" type="checkbox"></legend>
                 <div id="mc">
                 </div>
             </fieldset><fieldset>

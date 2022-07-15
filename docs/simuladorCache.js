@@ -23,6 +23,8 @@ const div_acessos = document.getElementById('acessos');
 //Função pra verificar se um número é potência de 2
 const isPowerOfTwo = number => (number & (number - 1)) === 0;
 
+const input_exibirDescritivos = document.getElementById('exibirDescritivos');
+
 var bytesMP=0;
 var celulasMP=0;
 var celulasBlocoMP=parseInt(input_celulasBlocoMP.value);
@@ -43,6 +45,13 @@ var execucaoSimulacao=null;
 var tempoExecucao=calcularTempoExecucao();
 var blocosAnteriores=[];
 var linhaLeitura=false;
+
+function criarDescritivo(argTexto) {
+    let novoDescritivo=document.createElement("span");
+    novoDescritivo.innerHTML=argTexto;
+    novoDescritivo.classList.add("descritivo");
+    return novoDescritivo;
+}
 
 class Conjunto {
     linhas=[];
@@ -97,60 +106,97 @@ class Linha {
     blocos=new Array(celulasBlocoMP);
     div_linha=null;
     div_valido=null;
+    div_validoValor=null;
     div_tag=null;
+    div_tagValor=null;
     div_blocos=null;
+    div_enderecos=null;
     conjuntoPai=null;
     linhaUso=0;
     constructor(argTag) {
         this.atualizarTag(argTag);
+        for (let i = 0; i < this.blocos.length; i++) {
+            this.blocos[i]=new Bloco(this,0);
+        }
     }
     desenharLinha(argNumLinha) {
         this.div_linha=document.createElement('div');
         this.div_linha.className='linha';
-        this.div_linha.innerHTML=argNumLinha+": ";
+        this.div_linha.innerHTML="<span class=\"numLinha\">"+argNumLinha+":</span>";
         this.div_valido=document.createElement('div');
         this.div_valido.className='valido';
+        this.div_validoValor=document.createElement('div');
+        this.div_validoValor.className='valor';
+        this.atribuirValorValido();
         this.div_tag=document.createElement('div');
         this.div_tag.className='tag';
+        this.div_tagValor=document.createElement('div');
+        this.div_tagValor.className='valor';
+        this.atribuirValorTag();
         this.div_blocos=document.createElement('div');
         this.div_blocos.className='blocos';
+        this.div_enderecos=document.createElement('div');
+        this.div_enderecos.className='enderecos';
         this.div_linha.appendChild(this.div_valido);
         this.div_linha.appendChild(this.div_tag);
         this.div_linha.appendChild(this.div_blocos);
-        this.div_valido.innerHTML="V<br>"+(this.valido?'1':'0');
-        this.div_tag.innerHTML="Tag<br>"+this.tag;
-        this.div_blocos.innerHTML='Blocos<br>';
+        this.div_valido.appendChild(criarDescritivo("V"));
+        this.div_valido.appendChild(this.div_validoValor);
+        this.div_tag.appendChild(criarDescritivo("Tag"));
+        this.div_tag.appendChild(this.div_tagValor);
+        this.div_blocos.appendChild(criarDescritivo("Bloco"));
+        this.div_blocos.appendChild(this.div_enderecos);
+        this.div_scrollerEsq=document.createElement("span");
+        this.div_scrollerEsq.innerHTML="<";
+        this.div_scrollerEsq.classList.add("scroller");
+        this.div_scrollerEsq.classList.add("esq");
+        this.div_scrollerEsq.addEventListener("mousedown",function(e) {
+            timerScroll=setInterval(function() {
+                e.target.parentElement.scrollLeft-=2;
+            },10);
+        });
+        this.div_scrollerEsq.onmouseleave=pararScroll;
+        this.div_scrollerDir=document.createElement("span");
+        this.div_scrollerDir.innerHTML=">";
+        this.div_scrollerDir.classList.add("scroller");
+        this.div_scrollerDir.classList.add("dir");
+        this.div_scrollerDir.addEventListener("mousedown",function(e) {
+            timerScroll=setInterval(function() {
+                e.target.parentElement.scrollLeft+=2;
+            },10);
+        });
+        this.div_scrollerDir.onmouseleave=pararScroll;
+        this.div_enderecos.appendChild(this.div_scrollerEsq);
         for (let i = 0; i < celulasBlocoMP; i++) {
-            if (this.blocos[i]==undefined) {
-                this.blocos[i]=0;
-            }
-            this.div_blocos.innerHTML+=this.blocos[i];
+            this.div_enderecos.appendChild(this.blocos[i].desenharBloco());
             if (i<celulasBlocoMP-1) {
-                this.div_blocos.innerHTML+=' | ';
+                let spanSeparador=document.createElement('span');
+                spanSeparador.innerHTML=' | ';
+                spanSeparador.classList.add("escondido");
+                this.div_enderecos.appendChild(spanSeparador);
             }
         }
+        this.div_enderecos.appendChild(this.div_scrollerDir);
         return this.div_linha;
     }
     atualizarLinha(argTag,argValorBlocos) {
         this.atualizarTag(argTag);
+        this.atribuirValorTag();
         this.atribuirValorBlocos(argValorBlocos);
-        this.valido=true;
-        this.div_valido.innerHTML="V<br>"+(this.valido?'1':'0');
-        this.div_tag.innerHTML="Tag<br>"+this.tag.toString();
-        this.div_blocos.innerHTML='Blocos<br>';
-        for (let i = 0; i < celulasBlocoMP; i++) {
-            this.div_blocos.innerHTML+=this.blocos[i];
-            if (i<celulasBlocoMP-1) {
-                this.div_blocos.innerHTML+=' | ';
-            }
-        }
+        this.atribuirValorValido();
         this.conjuntoPai.atualizarNumLinha();
         this.linhaUso=0;
+    }
+    atribuirValorValido() {
+        this.div_validoValor.innerHTML=(this.valido?'1':'0');
+    }
+    atribuirValorTag() {
+        this.div_tagValor.innerHTML=this.tag;
     }
     atribuirValorBlocos(argValorInicial) {
         var valorInicial=argValorInicial-(argValorInicial%celulasBlocoMP);        
         for (let i = 0; i < this.blocos.length; i++) {
-            this.blocos[i]=valorInicial+i;
+            this.blocos[i].atualizarBloco(valorInicial+i);
         }
         this.valido=true;
     }
@@ -169,11 +215,35 @@ class Linha {
         this.div_tag.classList.remove("acerto");
         this.div_tag.classList.remove("falta");
         this.div_blocos.classList.remove("lendo");
+        for (let i = 0; i < this.blocos.length; i++) {
+            this.blocos[i].limparCSS();
+        }
+    }
+}
+class Bloco {
+    div_bloco=null;
+    linhaPai=null;
+    valor=0;
+    constructor(argLinhaPai,argValor) {
+        this.linhaPai=argLinhaPai;
+        this.valor=argValor;
+    }
+    desenharBloco() {
+        this.div_bloco=document.createElement('div');
+        this.div_bloco.className='bloco';
+        this.div_bloco.innerHTML=this.valor;
+        return this.div_bloco;
+    }
+    atualizarBloco(argValor) {
+        this.valor=argValor;
+        this.div_bloco.innerHTML=this.valor;
+    }
+    limparCSS() {
+        this.div_bloco.classList.remove("acerto");
     }
 }
 
 function atualizaConfig() {
-    resetarSimulacao(false);
     bytesMP = parseInt(input_bytesMP.value);
     celulasMP = parseInt(input_celulasMP.value);
     if (!isPowerOfTwo(parseInt(input_celulasBlocoMP.value))) {
@@ -258,6 +328,7 @@ function atualizaMapeamento() {
     atualizaMemoriaCache();
 }
 function atualizaEnderecos() {
+    resetarSimulacao(false);
     enderecosTextarea=textarea_enderecos.value.split(",");
     novaTabela=document.createElement("table");
     novaLinha=document.createElement("tr");
@@ -322,6 +393,7 @@ function atualizaMemoriaCache() {
         }
         div_mc.appendChild(conjuntos[conjunto].desenharConjunto("Conjunto "+idConjunto+" ("+(bin2dec(idConjunto)+1)+")"));
     }
+    atualizarDescritivos();
 }
 function executarProximaEtapa() {
     if (acessoResultado==null) {
@@ -347,7 +419,7 @@ function executarProximaEtapa() {
         } else if (acessoResultado=="F1") {
             enderecos[numEnderecoLeitura][3].innerHTML="FALTA";
             enderecos[numEnderecoLeitura][3].classList.add("falta");
-            let descricaoBloco=blocosAnteriores[0].toString()+".."+blocosAnteriores[blocosAnteriores.length-1].toString();
+            let descricaoBloco=blocosAnteriores[0].valor.toString()+".."+blocosAnteriores[blocosAnteriores.length-1].valor.toString();
             enderecos[numEnderecoLeitura][4].innerHTML="Tag diferente. Atualiza o bloco na linha onde estavam os endereços "+descricaoBloco+" e atualiza a tag.";
         } else if (acessoResultado=="F2") {
             enderecos[numEnderecoLeitura][3].innerHTML="FALTA";
@@ -356,7 +428,7 @@ function executarProximaEtapa() {
         } else if (acessoResultado=="F3") {
             enderecos[numEnderecoLeitura][3].innerHTML="FALTA";
             enderecos[numEnderecoLeitura][3].classList.add("falta");
-            let descricaoBloco=blocosAnteriores[0].toString()+".."+blocosAnteriores[blocosAnteriores.length-1].toString();
+            let descricaoBloco=blocosAnteriores[0].valor.toString()+".."+blocosAnteriores[blocosAnteriores.length-1].valor.toString();
             enderecos[numEnderecoLeitura][4].innerHTML="Tag está diferente. Atualiza o bloco na linha onde estavam os endereços "+descricaoBloco+" através do método FIFO e atualiza a tag.";
         } else if (acessoResultado=="F4") {
             enderecos[numEnderecoLeitura][3].innerHTML="FALTA";
@@ -398,7 +470,7 @@ function lerConjunto() {
     if (conjuntoLendo==null) {
         conjuntoLendo=bin2dec(enderecoLendoBits.substring(bitsByteTag,bitsByteTag+bitsByteConjunto));
         conjuntos[conjuntoLendo].div_conjunto.classList.add("lendo");
-        conjuntos[conjuntoLendo].div_conjunto.scrollIntoView({block:"center",inline:"center",behavior:"smooth"});
+        conjuntos[conjuntoLendo].div_conjunto.scrollIntoView({block:"start",inline:"center",behavior:"smooth"});
         conjuntos[conjuntoLendo].atualizarUsosLinhas();
     }
 }
@@ -412,7 +484,9 @@ function lerBloco() {
                     conjuntos[conjuntoLendo].linhas[i].div_tag.classList.add("falta");
                 } else {
                     conjuntos[conjuntoLendo].linhas[i].div_tag.classList.add("acerto");
-                    conjuntos[conjuntoLendo].linhas[i].div_tag.scrollIntoView({block:"center",inline:"center"});
+                    conjuntos[conjuntoLendo].linhas[i].blocos[blocoLendo].div_bloco.classList.add("acerto");
+                    conjuntos[conjuntoLendo].linhas[i].blocos[blocoLendo].div_bloco.scrollIntoView({block:"center",inline:"center",behavior:"smooth"});
+                    //conjuntos[conjuntoLendo].linhas[i].div_tag.scrollIntoView({block:"center",inline:"center"});
                     conjuntos[conjuntoLendo].linhas[i].linhaUso=0;
                     linhaLeitura=i;
                     break;
@@ -521,6 +595,24 @@ function atualizaVelocidade() {
     }
 }
 
+function atualizarDescritivos() {
+    if (input_exibirDescritivos.checked) {
+        document.querySelectorAll('.descritivo').forEach(descritivo => {
+            descritivo.style.display="block";
+        });
+    } else {
+        document.querySelectorAll('.descritivo').forEach(descritivo => {
+            descritivo.style.display="none";
+        });
+    }
+}
+timerScroll=null;
+function pararScroll() {
+    clearInterval(timerScroll);
+}
+document.addEventListener("mouseup",pararScroll);
+
 //Ação!
 atualizaConfig();
-executarSimulacao();
+//executarSimulacao();
+atualizarDescritivos();
