@@ -14,7 +14,7 @@ Ao carregar o Beto pela primeira vez, ele traz uma configuração padrão e inic
 
 # Tem bugs?
 
-Sim, tem. Por exemplo, ao alterar alguns valores, certifique-se de que são potências de 2, senão você verá um monte de números decimais depois da vírgula e o estilo da página não vai ficar dos melhores.
+Sim, tem. Por exemplo, ao alterar alguns valores, certifique-se de que são potências de 2, senão você verá um monte de números decimais e o estilo da página não vai ficar dos melhores.
 
 Além disso, ao inserir outros valores para um novo teste, o Beto ainda não atualiza. É necessário efetuar alguma mudança na configuração pra ele gerar a nova tabela de endereços para acesso.
 
