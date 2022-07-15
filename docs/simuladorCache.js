@@ -117,6 +117,7 @@ class Linha {
         this.atualizarTag(argTag);
         for (let i = 0; i < this.blocos.length; i++) {
             this.blocos[i]=new Bloco(this,0);
+            this.blocos[i].indice=i;
         }
     }
     desenharLinha(argNumLinha) {
@@ -224,6 +225,7 @@ class Bloco {
     div_bloco=null;
     linhaPai=null;
     valor=0;
+    indice=0;
     constructor(argLinhaPai,argValor) {
         this.linhaPai=argLinhaPai;
         this.valor=argValor;
@@ -231,6 +233,7 @@ class Bloco {
     desenharBloco() {
         this.div_bloco=document.createElement('div');
         this.div_bloco.className='bloco';
+        this.div_bloco.title="[ "+this.indice.toString()+" ]";
         this.div_bloco.innerHTML=this.valor;
         return this.div_bloco;
     }
