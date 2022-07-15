@@ -89,21 +89,12 @@ a:hover {
     position: relative;
     width: 50vw;
 }
-#mc {
-    overflow-x: hidden;
-    overflow-y: scroll;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    height: 100%;
-    position: relative;
-    display: block;
-}
 #acessos {
     overflow-x: hidden;
     overflow-y: scroll;
     text-overflow: ellipsis;
     white-space: nowrap;
-    height: 100%;
+    height: calc(100% - 5em);
     width: auto;
     background-color: #EEE;
 }
@@ -116,6 +107,32 @@ a:hover {
 }
 #acessos table tr:hover {
     background-color: #FFF;
+}
+#resumoAcessos {
+    height: 5em;
+    width: 100%;
+    background-color: #DDD;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    align-items: baseline;
+    align-content: stretch;
+}
+#resumoAcessos * {
+    border-left: 1px outset #FFF8;
+    border-right: 1px outset #FFF8;
+    padding: 0.5em;
+    margin: 0em;
+    flex-grow: 2;
+}
+#mc {
+    overflow-x: hidden;
+    overflow-y: scroll;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    height: 100%;
+    position: relative;
+    display: block;
 }
 #mc .conjunto {
     width: 50vw;

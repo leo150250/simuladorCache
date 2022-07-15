@@ -20,6 +20,9 @@ const input_numEnderecosAleatorios = document.getElementById('numEnderecosAleato
 const div_mc = document.getElementById('mc');
 //Área dos endereços para acesso à memória
 const div_acessos = document.getElementById('acessos');
+const p_resumoSeqAcesso = document.getElementById('resumoSeqAcesso');
+const p_resumoNumLinhas = document.getElementById('resumoNumLinhas');
+const p_resumoTaxaAcerto = document.getElementById('resumoTaxaAcerto');
 
 //Função pra verificar se um número é potência de 2
 const isPowerOfTwo = number => (number & (number - 1)) === 0;
@@ -47,6 +50,10 @@ var execucaoSimulacao=null;
 var tempoExecucao=calcularTempoExecucao();
 var blocosAnteriores=[];
 var linhaLeitura=false;
+
+var linhasUsadas=0;
+var numAcertos=0;
+var numFaltas=0;
 
 function criarDescritivo(argTexto) {
     let novoDescritivo=document.createElement("span");
@@ -386,8 +393,14 @@ function atualizaEnderecos() {
     enderecoLendoBits=null;
     div_acessos.innerHTML="";
     div_acessos.appendChild(novaTabela);
+    p_resumoSeqAcesso.innerHTML="Acesso: "+numEnderecoLeitura+" / "+enderecos.length;
+    numAcertos=0;
+    numFaltas=0;
+    p_resumoTaxaAcerto.innerHTML="Acertos/Faltas: "+numAcertos+" ("+((numAcertos/enderecos.length)*100).toFixed(1)+"%) / "+numFaltas+" ("+((1-(numAcertos/enderecos.length))*100).toFixed(1)+"%)";
 }
 function atualizaMemoriaCache() {
+    linhasUsadas=0;
+    p_resumoNumLinhas.innerHTML="Linhas da MC usadas: "+linhasUsadas+" / "+linhasMC;
     conjuntos=[];
     div_mc.innerHTML="";
     for (let conjunto=0; conjunto<Math.pow(2,bitsByteConjunto); conjunto++) {
@@ -421,31 +434,38 @@ function executarProximaEtapa() {
             enderecos[numEnderecoLeitura][3].innerHTML="ACERTO";
             enderecos[numEnderecoLeitura][3].classList.add("acerto");
             enderecos[numEnderecoLeitura][4].innerHTML="V é válido e o endereço lido está no bloco.";
+            numAcertos++;
         } else if (acessoResultado=="F1") {
             enderecos[numEnderecoLeitura][3].innerHTML="FALTA";
             enderecos[numEnderecoLeitura][3].classList.add("falta");
             let descricaoBloco=blocosAnteriores[0].valor.toString()+".."+blocosAnteriores[blocosAnteriores.length-1].valor.toString();
             enderecos[numEnderecoLeitura][4].innerHTML="Tag diferente. Atualiza o bloco na linha onde estavam os endereços "+descricaoBloco+" e atualiza a tag.";
+            numFaltas++;
         } else if (acessoResultado=="F2") {
             enderecos[numEnderecoLeitura][3].innerHTML="FALTA";
             enderecos[numEnderecoLeitura][3].classList.add("falta");
             enderecos[numEnderecoLeitura][4].innerHTML="Falta compulsória. Carrega o bloco na próxima linha do conjunto.";
+            numFaltas++;
         } else if (acessoResultado=="F3") {
             enderecos[numEnderecoLeitura][3].innerHTML="FALTA";
             enderecos[numEnderecoLeitura][3].classList.add("falta");
             let descricaoBloco=blocosAnteriores[0].valor.toString()+".."+blocosAnteriores[blocosAnteriores.length-1].valor.toString();
             enderecos[numEnderecoLeitura][4].innerHTML="Tag está diferente. Atualiza o bloco na linha onde estavam os endereços "+descricaoBloco+" através do método FIFO e atualiza a tag.";
+            numFaltas++;
         } else if (acessoResultado=="F4") {
             enderecos[numEnderecoLeitura][3].innerHTML="FALTA";
             enderecos[numEnderecoLeitura][3].classList.add("falta");
             let descricaoBloco=blocosAnteriores[0].valor.toString()+".."+blocosAnteriores[blocosAnteriores.length-1].valor.toString();
             enderecos[numEnderecoLeitura][4].innerHTML="Tag está diferente. Atualiza o bloco na linha onde estavam os endereços "+descricaoBloco+" através do método LRU e atualiza a tag.";
+            numFaltas++;
         } else if (acessoResultado=="F5") {
             enderecos[numEnderecoLeitura][3].innerHTML="FALTA";
             enderecos[numEnderecoLeitura][3].classList.add("falta");
             let descricaoBloco=blocosAnteriores[0].valor.toString()+".."+blocosAnteriores[blocosAnteriores.length-1].valor.toString();
             enderecos[numEnderecoLeitura][4].innerHTML="Tag está diferente. Atualiza o bloco na linha onde estavam os endereços "+descricaoBloco+" através do método RANDOM e atualiza a tag.";
+            numFaltas++;
         }
+        p_resumoTaxaAcerto.innerHTML="Acertos/Faltas: "+numAcertos+" ("+((numAcertos/enderecos.length)*100).toFixed(1)+"%) / "+numFaltas+" ("+((1-(numAcertos/enderecos.length))*100).toFixed(1)+"%)";
         enderecos[numEnderecoLeitura][1].parentElement.scrollIntoView({block:"center",inline:"center"});
         enderecoLendoBits=null;
         conjuntoLendo=null;
@@ -462,6 +482,7 @@ function lerProximoEndereco() {
         enderecos[numEnderecoLeitura-1][1].parentElement.classList.remove("lendo");
     }
     if (numEnderecoLeitura<enderecos.length) {
+        p_resumoSeqAcesso.innerHTML="Acesso: "+(numEnderecoLeitura+1)+" / "+enderecos.length;
         enderecos[numEnderecoLeitura][1].parentElement.classList.add("lendo");
         enderecos[numEnderecoLeitura][1].parentElement.scrollIntoView({block:"center",inline:"center",behavior:"smooth"});
         enderecos[numEnderecoLeitura][3].innerHTML="Lendo...";
@@ -506,6 +527,8 @@ function lerBloco() {
                     break;
                 }
             } else {
+                linhasUsadas+=1;
+                p_resumoNumLinhas.innerHTML="Linhas da MC usadas: "+linhasUsadas+" / "+linhasMC;
                 conjuntos[conjuntoLendo].linhas[i].div_valido.classList.add("falta");
                 conjuntos[conjuntoLendo].linhas[i].div_valido.scrollIntoView({block:"center",inline:"center"});
                 linhaLeitura=i;
