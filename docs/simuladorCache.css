@@ -118,7 +118,6 @@ a:hover {
     background-color: #FFF;
 }
 #mc .conjunto {
-    text-overflow: ellipsis;
     width: 50vw;
     overflow: hidden;
     position: relative;
@@ -137,23 +136,22 @@ a:hover {
     margin-left: 1em;
     padding-left: 1em;
     white-space: nowrap;
-    max-width: 100%;
-    overflow: hidden;
-    position: relative;
+    width: auto;
+    display: flex;
 }
 #mc .linha:hover {
     background-color: #FFF;
 }
 #mc .linha * {
     display: inline-block;
-    padding: 0.1em 1em;
-    text-overflow: ellipsis;
+    padding: 0em 0.5em;
     position: relative;
     white-space: nowrap;
 }
 #mc .linha .numLinha {
     padding: 0em;
     width: 2em;
+    flex-shrink: 0;
 }
 #mc .linha .descritivo {
     display: block;
@@ -161,15 +159,55 @@ a:hover {
     padding: 0;
     user-select: none;
 }
-#mc .linha .bloco {
+#mc .linha .valor {
+    padding: 0;
+}
+#mc .linha .blocos {
+    width: fit-content;
+    padding: 0;
+    overflow: auto;
+}
+#mc .linha .blocos .enderecos {
+    background-color: #DDD;
+    overflow: hidden;
+    width: 100%;
+    position: relative;
+    padding: 0.1em 0;
+}
+#mc .linha .blocos .enderecos .scroller {
+    opacity: 0;
+    transition: 0.25s ease-in-out;
+    position: sticky;
+    background-color: var(--destaqueEscuro);
+    color: #FFF;
+    font-weight: bold;
+    font-variant: small-caps;
+    padding: 0 0.5em;
+    cursor: pointer;
+    user-select: none;
+    z-index: 1;
+}
+#mc .linha .blocos .enderecos .scroller.esq {
+    left: 0px;
+}
+#mc .linha .blocos .enderecos .scroller.dir {
+    right: 0px;
+}
+#mc .linha:hover .blocos .enderecos .scroller {
+    opacity: 1;
+}
+#mc .linha .blocos .enderecos .scroller:hover {
+    background-color: var(--destaqueClaro);
+}
+#mc .linha .blocos .enderecos .bloco {
     border-left: 1px outset #FFF8;
     border-right: 1px outset #FFF8;
-    background-color: #DDD;
-    padding: 0;
+    background-color: #CCC;
     width: 2em;
     max-width: 2em;
+    padding: 0;
 }
-#mc .linha .bloco:hover {
+#mc .linha .blocos .enderecos .bloco:hover {
     background-color: #EEE;
 }
 .acesso {
@@ -192,10 +230,10 @@ a:hover {
     }
 }
 .falta {
-    background-color: #e00000;
+    background-color: #e00000 !important;
 }
 .acerto {
-    background-color: #00e000;
+    background-color: #00e000 !important;
 }
 .binario {
     font-family: monospace;
