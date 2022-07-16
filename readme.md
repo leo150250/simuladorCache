@@ -1,5 +1,7 @@
 # Beto, o Simulador de Memória Cache
-https://img.shields.io/github/license/leo150250/simuladorCache?style=plastic
+[![GitHub license](https://img.shields.io/github/license/leo150250/simuladorCache?style=plastic)](https://github.com/leo150250/simuladorCache/blob/main/LICENSE)
+
+# O que é?
 
 Trata-se de um simulador que permite visualizar em tempo real e com interface interativa acessos à memória cache com configurações personalizáveis.
 
