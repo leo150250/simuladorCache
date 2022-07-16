@@ -1,4 +1,5 @@
 # Beto, o Simulador de Memória Cache
+https://img.shields.io/github/license/leo150250/simuladorCache?style=plastic
 
 Trata-se de um simulador que permite visualizar em tempo real e com interface interativa acessos à memória cache com configurações personalizáveis.
 
